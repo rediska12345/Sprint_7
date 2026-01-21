@@ -1,6 +1,6 @@
 import pytest
 import allure
-from generator import register_new_courier_and_return_login_password
+from generators import register_new_courier_and_return_login_password
 from methods.courier_methods import CourierMethods
 
 
