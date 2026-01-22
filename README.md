@@ -18,7 +18,7 @@
 pytest
 
 #### Запуск с генерацией Allure отчета
-pytest --alluredir=allure-results
+pytest tests/ -v -s --alluredir=allure-results
 
 ##### Просмотр Allure отчета
 allure serve allure_results

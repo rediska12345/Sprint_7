@@ -31,3 +31,8 @@ class CourierMethods:
             "password": password
         }
         return requests.put(DELETE_COURIER, data=payload)
+    
+    @staticmethod
+    @allure.step("Удаление курьера по ID: {courier_id}")
+    def delete_courier_by_id(courier_id):
+        return requests.delete(f"{DELETE_COURIER}/{courier_id}")
