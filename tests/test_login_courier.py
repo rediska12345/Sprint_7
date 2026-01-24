@@ -9,41 +9,61 @@ from methods.courier_methods import CourierMethods
 class TestLoginCourier:
 
     @allure.title("Успешный логин курьера")
-    def test_login_courier_success(self, courier):
-        login, password = courier
+    def test_login_courier_success(self):
+        courier_data = register_new_courier_and_return_login_password()
+        login, password, _ = courier_data
+
         response = CourierMethods.login_courier(login, password)
 
         assert response.status_code == 200
         assert "id" in response.json()
         assert response.json()["id"] > 0
 
+    
     @allure.title("Ошибка при введении логина с неверным логином")
-    def test_login_wrong_login(self, courier):
-        _, password = courier
+    def test_login_wrong_login(self):
+        courier_data = register_new_courier_and_return_login_password()
+        _, password, _ = courier_data
+
         response = CourierMethods.login_courier("wrong_login", password)
 
         assert response.status_code == 404
-        assert "message" in response.json()
+        assert response.json()["message"] == "Учетная запись не найдена"
 
+    
     @allure.title("Ошибка при введении логина с неверным паролем")
-    def test_login_wrong_password(self, courier):
-        login, _ = courier
+    def test_login_wrong_password(self):
+        courier_data = register_new_courier_and_return_login_password()
+        login, _, _ = courier_data
+
         response = CourierMethods.login_courier(login, "wrong_password")
 
         assert response.status_code == 404
-        assert "message" in response.json()
+        assert response.json()["message"] == "Учетная запись не найдена"
 
     @allure.title("Ошибка при введении логина без логина")
-    def test_login_without_login(self, courier):
-        _, password = courier
+    def test_login_without_login(self):
+        courier_data = register_new_courier_and_return_login_password()
+        _, password, _ = courier_data
+
         response = CourierMethods.login_courier("", password)
 
         assert response.status_code == 400
-        assert "message" in response.json()
+        assert response.json()["message"] == "Недостаточно данных для входа"
+
+    @allure.title("Ошибка при введении логина без пароля")
+    def test_login_without_password(self):
+        courier_data = register_new_courier_and_return_login_password()
+        login, _, _ = courier_data
+
+        response = CourierMethods.login_courier(login, "")
+
+        assert response.status_code == 400
+        assert response.json()["message"] == "Недостаточно данных для входа"
 
     @allure.title("Логин несуществующего пользователя")
     def test_login_nonexistent_user(self):
         response = CourierMethods.login_courier("nonexistent_user", "any_password")
 
         assert response.status_code == 404
-        assert "message" in response.json()
+        assert response.json()["message"] == "Учетная запись не найдена"

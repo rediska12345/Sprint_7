@@ -25,12 +25,3 @@ def create_courier():
         "password": password
     }
     response = requests.put(DELETE_COURIER, data=delete_payload)
-
-@pytest.fixture
-def courier():
-    courier_data = register_new_courier_and_return_login_password()
-    login, password, _ = courier_data
-    
-    yield login, password
-    
-    CourierMethods.delete_courier(login, password)
